@@ -6,7 +6,7 @@ client = genai.Client(
     api_key=GEMINI_API_KEY
 )
 
-def ask_gemini(prompt):
+def ask_gemini(prompt: str) -> str:
 
     try:
 
