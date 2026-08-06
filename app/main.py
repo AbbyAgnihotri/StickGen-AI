@@ -1,25 +1,38 @@
+import sys
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+
 import gradio as gr
+from services.gemini_service import ask_gemini
 
 
-def placeholder_generator(story, style, emotion, panels):
-    return (
-        f"""
-Story Received!
+def placeholder_generator(
+    story,
+    style,
+    emotion,
+    panels,
+):
 
+    prompt = f"""
 Story:
+
 {story}
 
 Style:
+
 {style}
 
 Emotion:
+
 {emotion}
 
-Panels:
-{panels}
-""",
-        None,
-    )
+Generate a short summary.
+"""
+
+    summary = ask_gemini(prompt)
+
+    return summary, None
 
 
 with gr.Blocks(title="StickGen AI") as demo:
