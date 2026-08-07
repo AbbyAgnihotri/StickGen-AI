@@ -1,5 +1,6 @@
 from models.schema import Character, Scene, Story
-from services.prompt_service import build_prompt
+from services.prompt_service import PromptService
+
 
 story = Story(
     title="Learning Bicycle",
@@ -9,7 +10,8 @@ story = Story(
             gender="boy",
             shirt="Blue",
             pants="Black",
-            hair="Short Black"
+            hair="Short Black",
+            emotion="happy"
         )
     ],
     scenes=[
@@ -21,6 +23,14 @@ story = Story(
     ]
 )
 
-prompt = build_prompt(story, story.scenes[0])
 
+prompt_service = PromptService()
+
+prompt = prompt_service.build_prompt(
+    story,
+    story.scenes[0]
+)
+
+print("\n========== GENERATED PROMPT ==========\n")
 print(prompt)
+print("\n=======================================\n")

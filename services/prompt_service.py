@@ -1,70 +1,42 @@
-from models.schema import Story, Scene
+from pathlib import Path
 
+IMAGE_PROMPT = Path(
+"prompts/image_prompt.txt"
+).read_text(
+encoding="utf-8"
+)
 
 class PromptService:
-    """
-    Converts Story objects into optimized image prompts.
-    """
 
-    BASE_STYLE = """
-minimal stick figure cartoon,
-simple black line art,
-white background,
-vector illustration,
-educational comic,
-clean outlines,
-cute,
-minimal details,
-comic style,
-black outlines
-"""
 
-    NEGATIVE_PROMPT = """
-photorealistic,
-3d,
-oil painting,
-watermark,
-signature,
-text,
-logo,
-extra fingers,
-extra arms,
-blurry,
-low quality
-"""
+    def build_prompt(self, story, scene):
 
-    def build_prompt(
-        self,
-        story: Story,
-        scene: Scene
-    ) -> str:
+        character_descriptions = []
 
-        character = story.characters[0]
+        for character in story.characters:
 
-        prompt = f"""
-{self.BASE_STYLE}
+            description = (
+                f"Character: {character.name}. "
+                f"Gender: {character.gender}. "
+                f"Shirt: {character.shirt}. "
+                f"Pants: {character.pants}. "
+                f"Hair: {character.hair}. "
+                f"Emotion: {character.emotion}."
+            )
 
-Character
+            character_descriptions.append(
+                description
+            )
 
-Name: {character.name}
+        characters_text = "\n".join(
+            character_descriptions
+        )
 
-Gender: {character.gender}
-
-Hair: {character.hair}
-
-Shirt: {character.shirt}
-
-Pants: {character.pants}
-
-Emotion: {character.emotion}
-
-Scene
-
-{scene.description}
-
-Negative Prompt
-
-{self.NEGATIVE_PROMPT}
-"""
+        prompt = IMAGE_PROMPT.format(
+            characters=characters_text,
+            scene_description=scene.description,
+            scene_caption=scene.caption
+        )
 
         return prompt.strip()
+

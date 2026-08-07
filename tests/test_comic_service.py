@@ -24,6 +24,6 @@ comic = ComicService().build(
 
 comic.save(
 
-    "outputs/comic.png"
+    "outputs/comic2.png"
 
 )

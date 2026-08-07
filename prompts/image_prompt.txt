@@ -1,0 +1,73 @@
+Create ONE single-panel illustration for a children's stick-figure comic.
+
+VISUAL STYLE:
+
+* Simple hand-drawn stick-figure cartoon
+* Clean black outlines
+* 2D illustration
+* White or very light background
+* Minimal visual detail
+* Friendly children's educational comic style
+* Clear body poses
+* Clear facial expressions
+* Consistent drawing style across all panels
+* No photorealism
+* No 3D rendering
+* No realistic human anatomy
+* No watermark
+* No logo
+* No text
+* No captions
+* No speech bubbles
+
+CHARACTER CONSISTENCY:
+
+These character descriptions are FIXED.
+
+Keep the following characteristics unchanged:
+
+* Character name
+* Gender
+* Shirt color/style
+* Pants color/style
+* Hair style
+* Overall stick-figure appearance
+
+Characters:
+
+{characters}
+
+SCENE:
+
+{scene_description}
+
+EMOTION:
+
+Show the appropriate emotion using facial expression and body posture.
+
+COMPOSITION:
+
+* Show the complete characters whenever possible.
+* Keep the main characters clearly visible.
+* Make the main action easy to understand.
+* Use a simple background appropriate for the scene.
+* Keep important objects visible.
+* Avoid unnecessary background objects.
+* Do not crop the main characters.
+* Keep the composition suitable for a comic panel.
+
+IMPORTANT:
+
+Generate ONLY the illustration for this scene.
+
+Do NOT generate:
+
+* Multiple panels
+* Comic page layouts
+* Captions
+* Speech bubbles
+* Text
+* Dialogue
+* Watermarks
+
+The application will add captions and speech bubbles separately.

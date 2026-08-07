@@ -1,6 +1,8 @@
-from services.story_service import create_story
+from services.story_service import StoryService
 
-story = create_story(
+story_service = StoryService()
+
+story = story_service.create_story(
 """
 A boy learns to ride a bicycle.
 

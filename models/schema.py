@@ -19,6 +19,7 @@ class Scene(BaseModel):
     scene: int = Field(..., ge=1)
     caption: str
     description: str
+    dialogue: str = ""
 
 
 class Story(BaseModel):
