@@ -14,27 +14,83 @@ OUTPUT_DIR = Path("outputs")
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 
-def generate_comic(story_text):
+def generate_comic(story_text, progress=gr.Progress()):
+
     if not story_text or not story_text.strip():
         raise gr.Error("Please enter a story.")
 
     try:
-        print("Generating comic...")
 
-        comic = workflow.run(story_text)
+        progress(0, desc="Starting...")
 
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        output_path = OUTPUT_DIR / f"comic_{timestamp}.png"
+        progress(0.10, desc="Generating story...")
+
+        story = workflow.story_service.create_story(
+            story_text
+        )
+
+        images = []
+
+        total_scenes = len(story.scenes)
+
+        for index, scene in enumerate(story.scenes):
+
+            progress(
+                0.20 + (0.60 * index / total_scenes),
+                desc=f"Generating scene {index + 1} of {total_scenes}..."
+            )
+
+            prompt = workflow.prompt_service.build_prompt(
+                story,
+                scene
+            )
+
+            image = workflow.image_service.generate(
+                prompt
+            )
+
+            images.append(image)
+
+        progress(
+            0.85,
+            desc="Building comic..."
+        )
+
+        comic = workflow.comic_service.build(
+            story,
+            images
+        )
+
+        progress(
+            0.95,
+            desc="Saving comic..."
+        )
+
+        timestamp = datetime.now().strftime(
+            "%Y%m%d_%H%M%S"
+        )
+
+        output_path = (
+            OUTPUT_DIR /
+            f"comic_{timestamp}.png"
+        )
 
         comic.save(output_path)
 
-        print(f"Comic saved to: {output_path}")
+        progress(
+            1.0,
+            desc="Comic ready!"
+        )
 
         return comic, str(output_path)
 
     except Exception as e:
+
         print(f"Error: {e}")
-        raise gr.Error(str(e))
+
+        raise gr.Error(
+            f"Generation failed: {e}"
+        )
 
 with gr.Blocks(title="StickGen AI") as demo:
 
