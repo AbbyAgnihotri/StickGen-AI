@@ -412,7 +412,7 @@ Comic Composition
 
 A multi-panel stick cartoon representing the story is generated and saved in the `outputs/` directory.
 
----
+----
 
 ## 🧩 Design Principles
 
@@ -466,7 +466,7 @@ ComicService
 
 This separation makes the application easier to test, maintain, and extend.
 
----
+----
 
 ## 🔐 Security
 
