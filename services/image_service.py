@@ -1,9 +1,15 @@
-from huggingface_hub import InferenceClient
+import time
+
 from PIL import Image
+from huggingface_hub import InferenceClient
+
 from config import HF_TOKEN
 
 
 class ImageService:
+    """
+    Generate images using Hugging Face Inference Providers.
+    """
 
     def __init__(self):
 
@@ -11,22 +17,53 @@ class ImageService:
             api_key=HF_TOKEN
         )
 
+        self.model = "black-forest-labs/FLUX.1-schnell"
+
     def generate(
         self,
-        prompt: str
+        prompt: str,
+        retries: int = 3
     ) -> Image.Image:
 
-        try:
+        last_error = None
 
-            image = self.client.text_to_image(
-                prompt=prompt,
-                model="black-forest-labs/FLUX.1-schnell"
-            )
+        for attempt in range(1, retries + 1):
 
-            return image
+            try:
 
-        except Exception as e:
+                print(
+                    f"Generating image "
+                    f"(attempt {attempt}/{retries})..."
+                )
 
-            raise RuntimeError(
-                f"Image generation failed: {e}"
-            )
+                image = self.client.text_to_image(
+                    prompt=prompt,
+                    model=self.model
+                )
+
+                return image
+
+            except Exception as e:
+
+                last_error = e
+
+                print(
+                    f"Image generation failed "
+                    f"on attempt {attempt}: {e}"
+                )
+
+                if attempt < retries:
+
+                    wait_time = attempt * 2
+
+                    print(
+                        f"Retrying in "
+                        f"{wait_time} seconds..."
+                    )
+
+                    time.sleep(wait_time)
+
+        raise RuntimeError(
+            "Image generation failed after "
+            f"{retries} attempts."
+        ) from last_error

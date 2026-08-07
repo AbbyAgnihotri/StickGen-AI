@@ -16,4 +16,4 @@ He wins.
 
 )
 
-comic.save("outputs/final_comic2.png")
+comic.save("outputs/final_comic_gemini.png")

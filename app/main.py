@@ -14,51 +14,21 @@ OUTPUT_DIR = Path("outputs")
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 
-def generate_comic(story_text, progress=gr.Progress()):
+def generate_comic(
+    story_text,
+    progress=gr.Progress()
+):
 
     if not story_text or not story_text.strip():
-        raise gr.Error("Please enter a story.")
+        raise gr.Error(
+            "Please enter a story."
+        )
 
     try:
 
-        progress(0, desc="Starting...")
-
-        progress(0.10, desc="Generating story...")
-
-        story = workflow.story_service.create_story(
-            story_text
-        )
-
-        images = []
-
-        total_scenes = len(story.scenes)
-
-        for index, scene in enumerate(story.scenes):
-
-            progress(
-                0.20 + (0.60 * index / total_scenes),
-                desc=f"Generating scene {index + 1} of {total_scenes}..."
-            )
-
-            prompt = workflow.prompt_service.build_prompt(
-                story,
-                scene
-            )
-
-            image = workflow.image_service.generate(
-                prompt
-            )
-
-            images.append(image)
-
-        progress(
-            0.85,
-            desc="Building comic..."
-        )
-
-        comic = workflow.comic_service.build(
-            story,
-            images
+        comic = workflow.run(
+            story_text,
+            progress=progress
         )
 
         progress(
