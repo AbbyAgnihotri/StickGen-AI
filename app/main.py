@@ -1,111 +1,46 @@
-import sys
-from pathlib import Path
-
-sys.path.append(str(Path(__file__).resolve().parent.parent))
-
 import gradio as gr
-from services.gemini_service import ask_gemini
+
+from workflows.comic_workflow import ComicWorkflow
 
 
-def placeholder_generator(
-    story,
-    style,
-    emotion,
-    panels,
-):
-
-    prompt = f"""
-Story:
-
-{story}
-
-Style:
-
-{style}
-
-Emotion:
-
-{emotion}
-
-Generate a short summary.
-"""
-
-    summary = ask_gemini(prompt)
-
-    return summary, None
+workflow = ComicWorkflow()
 
 
-with gr.Blocks(title="StickGen AI") as demo:
+def generate_comic(story_text):
+    if not story_text or not story_text.strip():
+        return None
 
-    gr.Markdown(
-        """
-# 🎨 StickGen AI
+    try:
+        comic = workflow.run(story_text)
 
-### Story → Comic Generator
-"""
-    )
+        return comic
 
-    story = gr.Textbox(
+    except Exception as e:
+        print(f"Error: {e}")
+        raise gr.Error(str(e))
+
+
+demo = gr.Interface(
+    fn=generate_comic,
+    inputs=gr.Textbox(
         label="Enter your story",
-        lines=8,
-        placeholder="Type your story here..."
-    )
+        placeholder="Example: Tom learns to ride a bicycle in the park.",
+        lines=5
+    ),
+    outputs=gr.Image(
+        label="Generated Stick Cartoon"
+    ),
+    title="StickGen AI",
+    description=(
+        "Transform a simple story into a generated stick cartoon."
+    ),
+    examples=[
+        ["Tom learns to ride a bicycle in the park."],
+        ["A girl finds a lost puppy and helps it find its owner."],
+        ["Two friends build a treehouse together."]
+    ]
+)
 
-    with gr.Row():
 
-        style = gr.Dropdown(
-            choices=[
-                "Stick Figure",
-                "Comic",
-                "Chalk",
-                "Sketch"
-            ],
-            value="Stick Figure",
-            label="Drawing Style"
-        )
-
-        emotion = gr.Dropdown(
-            choices=[
-                "Happy",
-                "Sad",
-                "Angry",
-                "Excited"
-            ],
-            value="Happy",
-            label="Emotion"
-        )
-
-        panels = gr.Dropdown(
-            choices=[2,4,6],
-            value=4,
-            label="Panels"
-        )
-
-    generate_btn = gr.Button(
-        "Generate Comic",
-        variant="primary"
-    )
-
-    status = gr.Textbox(
-        label="Status"
-    )
-
-    comic = gr.Image(
-        label="Generated Comic"
-    )
-
-    generate_btn.click(
-        fn=placeholder_generator,
-        inputs=[
-            story,
-            style,
-            emotion,
-            panels
-        ],
-        outputs=[
-            status,
-            comic
-        ]
-    )
-
-demo.launch()
+if __name__ == "__main__":
+    demo.launch()

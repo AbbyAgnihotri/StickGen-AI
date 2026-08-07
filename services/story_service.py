@@ -1,21 +1,32 @@
 from pathlib import Path
 
-PROMPT = Path("prompts/story_prompt.txt").read_text(encoding="utf-8")
+from models.schema import Story
+from services.gemini_service import ask_gemini
+from utils.json_utils import parse_llm_json
 
-user_story = """
-A girl wants to learn cycling.
+PROMPT = Path(
+    "prompts/story_prompt.txt"
+).read_text(encoding="utf-8")
 
-She falls.
+class StoryService:
 
-Her father teaches her.
+    def create_story(self, user_story: str) -> Story:
+        """
+        Convert a user story into a validated Story object.
+        """
 
-She wins a race.
-"""
+        full_prompt = f"""
+    {PROMPT}
 
-full_prompt = f"""
-{PROMPT}
+    Story:
 
-Story:
+    {user_story}
+    """
 
-{user_story}
-"""
+        response = ask_gemini(full_prompt)
+
+        data = parse_llm_json(response)
+
+        story = Story.model_validate(data)
+
+        return story

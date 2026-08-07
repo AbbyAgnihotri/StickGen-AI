@@ -1,19 +1,54 @@
 from models.schema import Story, Scene
 
 
-def build_prompt(story: Story, scene: Scene) -> str:
+class PromptService:
+    """
+    Converts Story objects into optimized image prompts.
+    """
 
-    character = story.characters[0]
-
-    prompt = f"""
-Minimal stick figure cartoon,
-simple black line drawing,
-vector illustration,
+    BASE_STYLE = """
+minimal stick figure cartoon,
+simple black line art,
 white background,
-cute educational illustration,
+vector illustration,
+educational comic,
+clean outlines,
+cute,
+minimal details,
+comic style,
+black outlines
+"""
 
-Character:
+    NEGATIVE_PROMPT = """
+photorealistic,
+3d,
+oil painting,
+watermark,
+signature,
+text,
+logo,
+extra fingers,
+extra arms,
+blurry,
+low quality
+"""
+
+    def build_prompt(
+        self,
+        story: Story,
+        scene: Scene
+    ) -> str:
+
+        character = story.characters[0]
+
+        prompt = f"""
+{self.BASE_STYLE}
+
+Character
+
 Name: {character.name}
+
+Gender: {character.gender}
 
 Hair: {character.hair}
 
@@ -21,17 +56,15 @@ Shirt: {character.shirt}
 
 Pants: {character.pants}
 
-Emotion:
-{character.emotion}
+Emotion: {character.emotion}
 
-Scene:
+Scene
+
 {scene.description}
 
-Comic style.
-No realistic rendering.
-No shading.
-No shadows.
-Clean outlines.
+Negative Prompt
+
+{self.NEGATIVE_PROMPT}
 """
 
-    return prompt.strip()
+        return prompt.strip()

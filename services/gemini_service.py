@@ -1,12 +1,13 @@
 from google import genai
-
 from config import GEMINI_API_KEY
 
-client = genai.Client(
-    api_key=GEMINI_API_KEY
-)
+client = genai.Client(api_key=GEMINI_API_KEY)
+
 
 def ask_gemini(prompt: str) -> str:
+    """
+    Send a prompt to Gemini and return plain text.
+    """
 
     try:
 
@@ -19,4 +20,6 @@ def ask_gemini(prompt: str) -> str:
 
     except Exception as e:
 
-        return f"Error: {e}"
+        raise RuntimeError(
+            f"Gemini Error: {e}"
+        )
