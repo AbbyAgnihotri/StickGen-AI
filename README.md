@@ -466,23 +466,7 @@ ComicService
 
 This separation makes the application easier to test, maintain, and extend.
 
-----
 
-## 🔐 Security
-
-API credentials are stored using environment variables.
-
-Do not commit:
-
-```text
-.env
-```
-
-to the repository.
-
-If an API token is accidentally exposed, revoke it and generate a new token.
-
----
 
 ## ⚠️ Limitations
 
@@ -554,8 +538,4 @@ Final Comic
 
 ---
 
-## 📄 License
 
-This project was developed as an academic/project implementation.
-
-Add an appropriate license if the repository is intended for public distribution.
